@@ -176,12 +176,12 @@ CIntersection CQuadrique::Intersection( const CRayon& Rayon )
 	REAL A = m_Quadratique.x;
 	REAL B = m_Quadratique.y;
 	REAL C = m_Quadratique.z;
-	REAL D = m_Mixte.z    * RENDRE_REEL(0.5);
-	REAL E = m_Mixte.x    * RENDRE_REEL(0.5);
-	REAL F = m_Mixte.y    * RENDRE_REEL(0.5);
-	REAL G = m_Lineaire.x * RENDRE_REEL(0.5);
-	REAL H = m_Lineaire.y * RENDRE_REEL(0.5);
-	REAL J = m_Lineaire.z * RENDRE_REEL(0.5);
+	REAL D = m_Mixte.z    /** RENDRE_REEL(0.5)*/;
+	REAL E = m_Mixte.x    /** RENDRE_REEL(0.5)*/;
+	REAL F = m_Mixte.y    /** RENDRE_REEL(0.5)*/;
+	REAL G = m_Lineaire.x /** RENDRE_REEL(0.5)*/;
+	REAL H = m_Lineaire.y /** RENDRE_REEL(0.5)*/;
+	REAL J = m_Lineaire.z /** RENDRE_REEL(0.5)*/;
 	REAL K = m_Cst;
 	REAL xo = Rayon.ObtenirOrigine().x;
 	REAL yo = Rayon.ObtenirOrigine().y;
@@ -193,18 +193,22 @@ CIntersection CQuadrique::Intersection( const CRayon& Rayon )
 	REAL t = 0;
 
 	REAL Aq = A*xd*xd + B*yd*yd + C*zd*zd + D*xd*yd + E*xd*zd + F*yd*zd;
-	REAL Bq = 2 * A*xo*xd + 2 * B*yo*yd + 2 * C*zo*zd + D*(xo*yd + yo*xd) + E*xo*zd + F*(yo*zd + yd*zo) + G*xd + H*yd + J*zd;
+	REAL Bq = 2 * A*xo*xd + 2 * B*yo*yd + 2 * C*zo*zd + D*(xo*yd + yo*xd) + E*(xo*zd + zo*xd) + F*(yo*zd + yd*zo) + G*xd + H*yd + J*zd;
 	REAL Cq = A*xo*xo + B*yo*yo + C*zo*zo + D*xo*yo + E*xo*zo + F*yo*zo + G*xo + H*yo + J*zo + K;
 	if (Aq == 0) {
 		t = -Cq / Bq;
 		intersection = true;
 	} else {
 		REAL delta = Bq * Bq - 4 * Aq * Cq;
-		if (delta < 0) {
-			intersection = true;
+		if (delta >= 0) {
 			t = (-Bq - sqrt(delta)) / (2 * Aq);
-			if (t < 0) {
+			if (t <= 0) {
 				t = (-Bq + sqrt(delta)) / (2 * Aq);
+				intersection = true;
+			}
+			else
+			{
+				intersection = true;
 			}
 		}
 	}
@@ -215,11 +219,16 @@ CIntersection CQuadrique::Intersection( const CRayon& Rayon )
 			2 * B*pos.y + D*pos.x + F*pos.z + H,
 			2 * C*pos.z + E*pos.x + F*pos.y + J));
 
+		if (CVecteur3::ProdScal(normale, Rayon.ObtenirDirection()) > 0)
+		{
+			normale = -normale;
+		}
+
 		// S'il y a collision, ajuster les variables suivantes de la structure intersection :
 		// Normale, Surface intersectée et la distance
 		Result.AjusterNormale(normale);
-		Result.AjusterSurface(this);
-		Result.AjusterDistance(CVecteur3::Norme(pos - Rayon.ObtenirDirection()));
+		Result.AjusterSurface(Copier());
+		Result.AjusterDistance(t);
 	}
 	return Result;
 }
