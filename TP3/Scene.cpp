@@ -747,7 +747,6 @@ const CCouleur CScene::ObtenirCouleurSurIntersection( const CRayon& Rayon, const
 			REAL GouraudFactor = ( *uneLumiere )->GetIntensity() * Intersection.ObtenirSurface()->ObtenirCoeffDiffus() *
 				CVecteur3::ProdScal( Intersection.ObtenirNormale(), LumiereRayon.ObtenirDirection() );
 			Result += Intersection.ObtenirSurface()->ObtenirCouleur() * GouraudFactor * LumiereCouleur;
-
 			// À COMPLÉTER
 			// AJOUTER LA CONTRIBUTION SPÉCULAIRE DE PHONG...
 		}
