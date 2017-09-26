@@ -747,7 +747,7 @@ const CCouleur CScene::ObtenirCouleurSurIntersection( const CRayon& Rayon, const
 			REAL GouraudFactor = ( *uneLumiere )->GetIntensity() * Intersection.ObtenirSurface()->ObtenirCoeffDiffus() *
 				CVecteur3::ProdScal( Intersection.ObtenirNormale(), LumiereRayon.ObtenirDirection() );
 			Result += Intersection.ObtenirSurface()->ObtenirCouleur() * GouraudFactor * LumiereCouleur;
-			// À COMPLÉTER
+
 			CVecteur3 R = CVecteur3::Reflect(LumiereRayon.ObtenirDirection(), Intersection.ObtenirNormale());
 			REAL scalProd = CVecteur3::ProdScal(R, Rayon.ObtenirDirection());
 			if (scalProd > 0)
@@ -757,8 +757,6 @@ const CCouleur CScene::ObtenirCouleurSurIntersection( const CRayon& Rayon, const
 					pow(scalProd, Intersection.ObtenirSurface()->ObtenirCoeffBrillance());
 				Result += specularFactor * LumiereCouleur;
 			}
-			
-			// AJOUTER LA CONTRIBUTION SPÉCULAIRE DE PHONG...
 		}
 	}
 
@@ -767,15 +765,12 @@ const CCouleur CScene::ObtenirCouleurSurIntersection( const CRayon& Rayon, const
 	if(  ReflectedRayonEnergy > m_EnergieMinRayon && Rayon.ObtenirNbRebonds() < m_NbRebondsMax )
 	{
 		CRayon ReflectedRayon;
-		// À COMPLÉTER
-		//Ajuster la direction du rayon réfracté
-		//ReflectedRayon.AjusterDirection( ... );
+		ReflectedRayon.AjusterDirection( CVecteur3::Reflect(Rayon.ObtenirDirection(), Intersection.ObtenirNormale()));
 		ReflectedRayon.AjusterOrigine( IntersectionPoint );
 		ReflectedRayon.AjusterEnergie( ReflectedRayonEnergy );
 		ReflectedRayon.AjusterNbRebonds( Rayon.ObtenirNbRebonds() + 1 );
 		
-		//À decommenter apres ajustement de la direction!
-		//Result += ObtenirCouleur( ReflectedRayon ) * Intersection.ObtenirSurface()->ObtenirCoeffReflexion();
+		Result += ObtenirCouleur( ReflectedRayon ) * Intersection.ObtenirSurface()->ObtenirCoeffReflexion();
 	}
 
 	// Effectuer les réfractions de rayon
@@ -799,17 +794,13 @@ const CCouleur CScene::ObtenirCouleurSurIntersection( const CRayon& Rayon, const
 			RefractedRayon.AjusterIndiceRefraction( Intersection.ObtenirSurface()->ObtenirIndiceRefraction() );
 			IndiceRefractionRatio = m_IndiceRefractionScene / Intersection.ObtenirSurface()->ObtenirIndiceRefraction();
 		}
-
 		
 		RefractedRayon.AjusterOrigine( IntersectionPoint );
 		RefractedRayon.AjusterEnergie( RefractedRayonEnergy );
 		RefractedRayon.AjusterNbRebonds( Rayon.ObtenirNbRebonds() + 1 );
-		// À COMPLÉTER
-		//Ajuster la direction du rayon réfracté
-		// ...
+		RefractedRayon.AjusterDirection(CVecteur3::Refract(Rayon.ObtenirDirection(), SurfaceNormal, IndiceRefractionRatio));
 
-		//A decommenter apres ajustement de la direction!
-		//Result += ObtenirCouleur( RefractedRayon ) * Intersection.ObtenirSurface()->ObtenirCoeffRefraction();
+		Result += ObtenirCouleur( RefractedRayon ) * Intersection.ObtenirSurface()->ObtenirCoeffRefraction();
 	}
 
 	return Result;
@@ -837,12 +828,19 @@ const CCouleur CScene::ObtenirFiltreDeSurface( CRayon& LumiereRayon ) const
 	REAL Distance = CVecteur3::Norme(LumiereRayon.ObtenirDirection());
 	LumiereRayon.AjusterDirection(LumiereRayon.ObtenirDirection() / Distance);
 
-	// TODO : À COMPLÉTER ...
 	// Tester le rayon de lumière avec chaque surface de la scène
 	// pour vérifier s'il y a intersection
+	for (SurfaceIterator aSurface = m_Surfaces.begin(); aSurface != m_Surfaces.end(); aSurface++)
+	{
 
-	// S'il y a une intersection appliquer la translucidité de la surface
-	// intersectée sur le filtre
+		LumiereIntersection = (*aSurface)->Intersection(LumiereRayon);
+
+		// S'il y a une intersection appliquer la translucidité de la surface
+		// intersectée sur le filtre
+		if (LumiereIntersection.ObtenirDistance() > EPSILON) {
+			Filter *= (*aSurface)->ObtenirCoeffRefraction() * (*aSurface)->ObtenirCouleur();
+		}
+	}
 
 	return Filter;
 }
