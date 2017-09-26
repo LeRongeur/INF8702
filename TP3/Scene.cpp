@@ -834,7 +834,6 @@ const CCouleur CScene::ObtenirFiltreDeSurface( CRayon& LumiereRayon ) const
 	LumiereRayon.AjusterDirection(LumiereRayon.ObtenirDirection() / Distance);
 
 	// TODO : À COMPLÉTER ...
-
 	// Tester le rayon de lumière avec chaque surface de la scène
 	// pour vérifier s'il y a intersection
 

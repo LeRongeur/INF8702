@@ -137,7 +137,7 @@ CIntersection CTriangle::Intersection(const CRayon& Rayon)
 	// Notez que la normale du triangle est déjà calculée lors du prétraitement
 	// il suffit que de la passer à la structure d'intersection.
 	CVecteur3 edge1 = m_Pts[1] - m_Pts[0];
-	CVecteur3 edge2 = m_Pts[2] - m_Pts[1];
+	CVecteur3 edge2 = m_Pts[2] - m_Pts[0];
 	CVecteur3 pvec = CVecteur3::ProdVect(Rayon.ObtenirDirection(), edge2);
 	REAL det = CVecteur3::ProdScal(edge1, pvec);
 
@@ -161,7 +161,12 @@ CIntersection CTriangle::Intersection(const CRayon& Rayon)
 	REAL t = CVecteur3::ProdScal(edge2, qvec) / det;
 	Result.AjusterDistance(t);
 	Result.AjusterSurface(this);
-	Result.AjusterNormale(m_Normale);
+	if (CVecteur3::ProdScal(m_Normale, Rayon.ObtenirDirection()) > 0) {
+		Result.AjusterNormale(-m_Normale);
+	}
+	else {
+		Result.AjusterNormale(m_Normale);
+	}
 	return Result;
 }
 

@@ -1,1 +1,4 @@
-﻿
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: Le répertoire intermédiaire (Debug\) contient des fichiers partagés provenant d'un autre projet (TP1.vcxproj). Cela peut entraîner un comportement de nettoyage et de régénération incorrect.
+  Scene.cpp
+  TP3.vcxproj -> Y:\INF8702_TP3\TP3\Debug\TP3.exe
+  TP3.vcxproj -> Y:\INF8702_TP3\TP3\Debug\TP3.pdb (Full PDB)

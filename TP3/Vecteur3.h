@@ -547,8 +547,8 @@ namespace Math3D
 	///////////////////////////////////////////////////////////////////////////////
 	inline const CVecteur3 CVecteur3::Reflect( const CVecteur3& Vecteur, const CVecteur3& Normal )
 	{
-		// À COMPLÉTER ...
-		return Vecteur;
+		CVecteur3 Result = Vecteur - 2 * CVecteur3::ProdScal(Vecteur, Normal) * Normal;
+		return Result;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -567,8 +567,6 @@ namespace Math3D
 	inline const CVecteur3 CVecteur3::Refract( const CVecteur3& Vecteur, const CVecteur3& Normal, const REAL IndiceRefractionRatio )
 	{
 		CVecteur3 Result;
-
-		// À COMPLÉTER ...
 
 		return Result;
 	}
