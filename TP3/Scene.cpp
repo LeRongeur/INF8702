@@ -798,9 +798,9 @@ const CCouleur CScene::ObtenirCouleurSurIntersection( const CRayon& Rayon, const
 		RefractedRayon.AjusterOrigine( IntersectionPoint );
 		RefractedRayon.AjusterEnergie( RefractedRayonEnergy );
 		RefractedRayon.AjusterNbRebonds( Rayon.ObtenirNbRebonds() + 1 );
-		RefractedRayon.AjusterDirection(CVecteur3::Refract(Rayon.ObtenirDirection(), SurfaceNormal, IndiceRefractionRatio));
+		RefractedRayon.AjusterDirection(CVecteur3::Normaliser(CVecteur3::Refract(Rayon.ObtenirDirection(), SurfaceNormal, IndiceRefractionRatio)));
 
-		Result += ObtenirCouleur( RefractedRayon ) * Intersection.ObtenirSurface()->ObtenirCoeffRefraction();
+		Result += ObtenirCouleur(RefractedRayon) * Intersection.ObtenirSurface()->ObtenirCoeffRefraction();
 	}
 
 	return Result;

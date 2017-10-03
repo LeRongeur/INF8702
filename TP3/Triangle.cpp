@@ -148,20 +148,20 @@ CIntersection CTriangle::Intersection(const CRayon& Rayon)
 
 	REAL U = CVecteur3::ProdScal(tvec, pvec);
 
-	if ((U < RENDRE_REEL(0.0)) || (U > det))
+	if ((U < EPSILON) || (U > det))
 		return Result;
 
 	CVecteur3 qvec = CVecteur3::ProdVect(tvec, edge1);
 
 	REAL V = CVecteur3::ProdScal(Rayon.ObtenirDirection(), qvec);
 
-	if ((V < RENDRE_REEL(0.0)) || (U + V > det))
+	if ((V < EPSILON) || (U + V > det))
 		return Result;
 
 	REAL t = CVecteur3::ProdScal(edge2, qvec) / det;
 	Result.AjusterDistance(t);
 	Result.AjusterSurface(this);
-	if (CVecteur3::ProdScal(m_Normale, Rayon.ObtenirDirection()) > 0) {
+	if (CVecteur3::ProdScal(m_Normale, Rayon.ObtenirDirection()) > EPSILON) {
 		Result.AjusterNormale(-m_Normale);
 	}
 	else {

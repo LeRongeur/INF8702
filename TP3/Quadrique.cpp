@@ -176,12 +176,12 @@ CIntersection CQuadrique::Intersection( const CRayon& Rayon )
 	REAL A = m_Quadratique.x;
 	REAL B = m_Quadratique.y;
 	REAL C = m_Quadratique.z;
-	REAL D = m_Mixte.z    /** RENDRE_REEL(0.5)*/;
-	REAL E = m_Mixte.x    /** RENDRE_REEL(0.5)*/;
-	REAL F = m_Mixte.y    /** RENDRE_REEL(0.5)*/;
-	REAL G = m_Lineaire.x /** RENDRE_REEL(0.5)*/;
-	REAL H = m_Lineaire.y /** RENDRE_REEL(0.5)*/;
-	REAL J = m_Lineaire.z /** RENDRE_REEL(0.5)*/;
+	REAL D = m_Mixte.z;
+	REAL E = m_Mixte.x;
+	REAL F = m_Mixte.y;
+	REAL G = m_Lineaire.x;
+	REAL H = m_Lineaire.y;
+	REAL J = m_Lineaire.z;
 	REAL K = m_Cst;
 	REAL xo = Rayon.ObtenirOrigine().x;
 	REAL yo = Rayon.ObtenirOrigine().y;
@@ -200,9 +200,9 @@ CIntersection CQuadrique::Intersection( const CRayon& Rayon )
 		intersection = true;
 	} else {
 		REAL delta = Bq * Bq - 4 * Aq * Cq;
-		if (delta >= 0) {
+		if (delta > EPSILON) {
 			t = (-Bq - sqrt(delta)) / (2 * Aq);
-			if (t <= 0) {
+			if (t < EPSILON) {
 				t = (-Bq + sqrt(delta)) / (2 * Aq);
 				intersection = true;
 			}
@@ -218,11 +218,6 @@ CIntersection CQuadrique::Intersection( const CRayon& Rayon )
 		CVecteur3 normale = CVecteur3::Normaliser(CVecteur3(2 * A*pos.x + D*pos.y + E*pos.z + G,
 			2 * B*pos.y + D*pos.x + F*pos.z + H,
 			2 * C*pos.z + E*pos.x + F*pos.y + J));
-
-		if (CVecteur3::ProdScal(normale, Rayon.ObtenirDirection()) > 0)
-		{
-			normale = -normale;
-		}
 
 		// S'il y a collision, ajuster les variables suivantes de la structure intersection :
 		// Normale, Surface intersectée et la distance
