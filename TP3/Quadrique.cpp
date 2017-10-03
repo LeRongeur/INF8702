@@ -200,9 +200,9 @@ CIntersection CQuadrique::Intersection( const CRayon& Rayon )
 		intersection = true;
 	} else {
 		REAL delta = Bq * Bq - 4 * Aq * Cq;
-		if (delta >= 0) {
+		if (delta >= EPSILON) {
 			t = (-Bq - sqrt(delta)) / (2 * Aq);
-			if (t <= 0) {
+			if (t <= EPSILON) {
 				t = (-Bq + sqrt(delta)) / (2 * Aq);
 				intersection = true;
 			}
@@ -219,10 +219,10 @@ CIntersection CQuadrique::Intersection( const CRayon& Rayon )
 			2 * B*pos.y + D*pos.x + F*pos.z + H,
 			2 * C*pos.z + E*pos.x + F*pos.y + J));
 
-		if (CVecteur3::ProdScal(normale, Rayon.ObtenirDirection()) > 0)
+		/*if (CVecteur3::ProdScal(normale, Rayon.ObtenirDirection()) > 0)
 		{
 			normale = -normale;
-		}
+		}*/
 
 		// S'il y a collision, ajuster les variables suivantes de la structure intersection :
 		// Normale, Surface intersectée et la distance

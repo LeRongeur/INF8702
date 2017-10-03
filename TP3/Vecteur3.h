@@ -569,15 +569,15 @@ namespace Math3D
 	{
 		CVecteur3 Result;
 
-		REAL N_dot_I = CVecteur3::ProdScal(Normal, Vecteur);
-		if (N_dot_I < 0)
-			N_dot_I = -N_dot_I;
-		REAL k = RENDRE_REEL(1.0) - IndiceRefractionRatio * IndiceRefractionRatio * (RENDRE_REEL(1.0) - N_dot_I*N_dot_I);
-		if (k < EPSILON)
-			Result = Reflect(Vecteur, Normal);
+		CVecteur3 Z = IndiceRefractionRatio * (Vecteur - (ProdScal(Vecteur, Normal) * Normal));
+		if (CVecteur3::Norme(Z) > 1)
+		{
+			Result = CVecteur3::Reflect(Vecteur, Normal);
+		}
 		else
-			Result = IndiceRefractionRatio * Vecteur + (IndiceRefractionRatio * N_dot_I - RENDRE_REEL(sqrt(k))) * Normal;
-
+		{
+			Result = Z - (sqrt(1 - CVecteur3::Norme(Z)*CVecteur3::Norme(Z))) * Normal;
+		}
 		return Result;
 	}
 }

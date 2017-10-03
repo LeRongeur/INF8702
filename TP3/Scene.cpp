@@ -837,9 +837,10 @@ const CCouleur CScene::ObtenirFiltreDeSurface( CRayon& LumiereRayon ) const
 
 		// S'il y a une intersection appliquer la translucidité de la surface
 		// intersectée sur le filtre
-		if (LumiereIntersection.ObtenirDistance() > EPSILON) {
+		if (LumiereIntersection.ObtenirDistance() > EPSILON && LumiereIntersection.ObtenirDistance() < Distance) {
 			Filter *= (*aSurface)->ObtenirCoeffRefraction() * (*aSurface)->ObtenirCouleur();
 		}
+
 	}
 
 	return Filter;
