@@ -1,0 +1,17 @@
+Questions
+
+Question 1 : Dans le code, vous utilisez un coefficient de réfraction et un indice de réfraction. En quoi leurs utilités sont-elles différentes ?
+
+Indice de réfraction ? n1/n2 (dépend des 2 milieux)
+Coeff de réfraction ? teinte de l’objet (dépend de la surface uniquement)
+
+
+Question 2 : Si vous vouliez implémenter un lanceur de rayon sur GPUs quelles seraient les étapes nécessaires pour y arriver ?
+
+On pourrait avoir un nuanceur de calcul. Celui-ci devrait utiliser la technique de lancer de rayon afin de trouver les intersections et de trouver les lumières agissant sur les pixels afin de créer une texture 2D de la scène. Puis, dans les nuanceurs de sommets et de fragments, il ne suffirait que de faire l’équivalence entre la position et les coordonnées de la texture pour savoir de quelle couleur serait le pixel.
+
+
+Question 3 : Une fois cela fait, comment pourriez-vous appliquer un éclairage réaliste (lanceur de rayon) sur seulement quelques parties de la scène (comme les yeux d’un personnage)?
+
+On peut, après le calcul normal des pixels, lancer un rayon pour chaque pixel, et ne rien modifier si au premier rebond, nous ne rencontrons pas la bonne surface.
+Avec cette méthode, nous calculons 2 fois la surface, nous pouvons la rendre minimaliste pour le pre-mier calcul (couleur uniforme sans texture).
