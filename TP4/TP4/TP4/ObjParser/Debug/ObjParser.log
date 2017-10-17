@@ -1,0 +1,13 @@
+﻿  Vecteur3.cpp
+  StringUtils.cpp
+  ParserTextAbstrait.cpp
+  OBJParser.cpp
+c:\temp\inf8702\tp4\tp4\tp4\objparser\objparser.cpp(52): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(2260): note: voir la déclaration de 'sscanf'
+c:\temp\inf8702\tp4\tp4\tp4\objparser\objparser.cpp(58): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(2260): note: voir la déclaration de 'sscanf'
+c:\temp\inf8702\tp4\tp4\tp4\objparser\objparser.cpp(65): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdio.h(2260): note: voir la déclaration de 'sscanf'
+  Génération de code en cours...
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1369,5): warning MSB8012: TargetPath(C:\TEMP\INF8702\TP4\TP4\TP4\Debug\ObjParser.lib) ne correspond pas à la valeur de la propriété OutputFile (C:\TEMP\INF8702\TP4\TP4\TP4\ObjParser\lib\ObjParser.lib) de Library. Cela peut entraîner une génération incorrecte de votre projet. Pour corriger ce problème, vérifiez que les valeurs des propriétés $(OutDir), $(TargetName) et $(TargetExt) correspondent à la valeur spécifiée dans %(Lib.OutputFile).
+  ObjParser.vcxproj -> C:\TEMP\INF8702\TP4\TP4\TP4\Debug\ObjParser.lib
