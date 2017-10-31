@@ -336,6 +336,12 @@ void initialisation (void) {
 	// TODO 
 	// Création des trois FBOs pour cartes d'ombres:
     // Utilisez CCst::tailleShadowMap
+	shadowMaps[0] = new CFBO();
+	shadowMaps[0]->Init(CCst::tailleShadowMap, CCst::tailleShadowMap);
+	shadowMaps[1] = new CFBO();
+	shadowMaps[1]->Init(CCst::tailleShadowMap, CCst::tailleShadowMap);
+	shadowMaps[2] = new CFBO();
+	shadowMaps[2]->Init(CCst::tailleShadowMap, CCst::tailleShadowMap);
 	
 
 	construireMatricesProjectivesEclairage();
@@ -381,6 +387,13 @@ void construireCartesOmbrage(void)
 	{
 		// TODO :
 		// ...
+		lightMVP = lightVP[i] * venusModelMatrix;
+		progNuanceurShadowMap.activer();
+		shadowMaps[i]->CommencerCapture();
+		handle = glGetUniformLocation(progNuanceurShadowMap.getProg(), "shadowMVP");
+		glUniformMatrix4fv(handle, 1, GL_FALSE, &lightMVP[0][0]);
+		modele3Dvenus->dessiner();
+		shadowMaps[i]->TerminerCapture();
 	}
 }
 
@@ -420,20 +433,46 @@ void construireMatricesProjectivesEclairage(void)
 	// position = position lumière
 	// point visé : centre de l'objet (on triche avec la lumière ponctuelle)
 	// fov = Assez pour voir completement le moèdle (~90 est OK).
-
-
+	CVar::lumieres[0]->obtenirPos(pos);
+	point_vise = modele3Dvenus->obtenirCentroid();
+	fov = 90;
+	glm::vec3 posVec3 = glm::tvec3<GLfloat>(pos[0], pos[1], pos[2]);
+	lumVueMat = glm::lookAt(posVec3, point_vise, glm::tvec3<GLfloat>(0.0, 1.0, 0.0));
+	lumProjMat = glm::perspective(fov, 1.0f, 0.1f, 2000.0f);
+	lightVP[0] = lumProjMat * lumVueMat;
+	
 	/// LUM1 : SPOT : sauvegarder dans lightVP[1]
 	//	position = position lumière
 	//	direction = spot_dir (attention != point visé)
 	//  fov = angle du spot
-
-
+	CVar::lumieres[1]->obtenirPos(pos);
+	CVar::lumieres[1]->obtenirSpotDir(dir);
+	fov = CVar::lumieres[1]->obtenirSpotCutOff();
+	posVec3 = glm::vec3(pos[0], pos[1], pos[2]);
+	glm::vec3 dirVec3 = glm::vec3(dir[0], dir[1], dir[2]);
+	lumVueMat = glm::lookAt(posVec3, 
+		posVec3 + dirVec3,
+		glm::vec3(0.0, 1.0, 0.0));
+	lumProjMat = glm::perspective(glm::radians(fov), 1.0f, 0.1f, 2000.0f);
+	lightVP[1] = lumProjMat * lumVueMat;
 
 	//LUM2 : DIRECTIONNELLE : sauvegarder dans lightVP[2]
 	//	position = -dir * K | K=constante assez grande pour ne pas être dans le modèle
 	//	direction = 0,0,0
 	//  projection orthogonale, assez large pour voir le modèle (ortho_width)
-
+	CVar::lumieres[2]->obtenirPos(pos);
+	pos[0] = -pos[0] * K;
+	pos[1] = -pos[1] * K;
+	pos[2] = -pos[2] * K;
+	pos[3] = -pos[3] * K;
+	dir[0] = 0;
+	dir[1] = 0;
+	dir[2] = 0;
+	posVec3 = glm::vec3(pos[0], pos[1], pos[2]);
+	dirVec3 = glm::vec3(dir[0], dir[1], dir[2]);
+	lumVueMat = glm::lookAt(posVec3, dirVec3, glm::vec3(0.0, 1.0, 0.0));
+	lumProjMat = glm::ortho(-ortho_width, ortho_width, -ortho_width, ortho_width, 0.001f, 2000.0f);
+	lightVP[2] = lumProjMat * lumVueMat;
 }
 
 

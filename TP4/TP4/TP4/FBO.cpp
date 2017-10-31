@@ -212,7 +212,7 @@ void CFBO::CommencerCapture()
 	// ...
 	glBindFramebuffer(GL_FRAMEBUFFER, (GLuint)m_FBO);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(0, 0, CVar::currentW, CVar::currentH);
+	glViewport(0, 0, m_TextureW, m_TextureH);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
