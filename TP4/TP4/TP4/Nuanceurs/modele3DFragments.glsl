@@ -205,11 +205,11 @@ vec4 lightingIBL()
     // l'intérieur du skybox a été filtrée (léger flou).
 
     // quelques déclarations relatives à l'IBL
-    mat3 normalMatrix_wolrdSpace;    // la matrice de transfo en coord. univ. de la normale
+    mat3 normalMatrix_worldSpace;    // la matrice de transfo en coord. univ. de la normale
     vec3 normal_worldSpace;          // la normale en coord. universelles
     vec3 vertexPos_worldSpace;       // la position du vertex en coord. universelles.
     vec3 eyeDir_worldSpace;          // la direction vertex-caméra en coord. universelles
-    vec3 reflectDir_wordlSpace;      // la direction de réflexion (en coord. univ.) pour le calcul du IBL spéculaire
+    vec3 reflectDir_worldSpace;      // la direction de réflexion (en coord. univ.) pour le calcul du IBL spéculaire
 
     // Afin de calculer la normale en coord. universelles (WORLD COORD.)
     // (à ne pas mélanger avec les coordonnées de visualisation ou eyeCoord ! qu'on 
@@ -217,20 +217,27 @@ vec4 lightingIBL()
     // C'est facile, la normalMatrix est toujours uniquement la sous-matrice 3X3
     // de la matrice utilisée pour placer les modèles tant que l'on scale uniformément...
     // normalMatrix_wolrdSpace = ...
+	normalMatrix_worldSpace = mat3(modelMatrix);
 
     // Calcul de la normale en coordonnées universelles (world coord)
     // normal_worldSpace = ...
+	normal_worldSpace = normalMatrix_worldSpace * Normal_objectSpace;
 
     // Lire la contribution diffuse du fragment dans la carte spéculaire.
     // Diffuse += ...
+	Diffuse += texture(diffMap, normal_worldSpace);
 
     // Pour le calcul spéculaire, on veut échantillonner la texture spéculaire 
 	// là ou la reflexion du vecteur wcEyedir est reflétée.
 
     // vertexPos_worldSpace = ...
     // eyeDir_worldSpace = ...
-    // reflectDir_wordlSpace = ...
+    // reflectDir_worldSpace = ...
     // Specular += ...
+	vertexPos_worldSpace = vec3(modelMatrix * Position_objectSpace);
+	eyeDir_worldSpace = -EyePos_worldSpace + vertexPos_worldSpace;
+	reflectDir_worldSpace = reflect(eyeDir_worldSpace, normal_worldSpace);
+	Specular += texture(specMap, reflectDir_worldSpace);
 
     // Ajout des contribution lumineuses calculées
     resColor += Diffuse * matDiffuse;
