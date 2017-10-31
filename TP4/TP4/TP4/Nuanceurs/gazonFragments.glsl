@@ -66,18 +66,28 @@ float Ombrage(in vec4 fragLightCoord, in sampler2D shadowMap)
 	// Il faut donc le faire explicitement ici :
 	// (https://en.wikipedia.org/wiki/Transformation_matrix#Perspective_projection)
     // projCoords = ...
+	projCoords = (fragLightCoord.xyz) / fragLightCoord.w;
+	
    
     // On transforme ces coordonées situées en [-1,1] vers [0,1]:
     // projCoords = ...
+	projCoords = (projCoords + vec3(1.0, 1.0, 1.0)) / 2;
 
     // On échantillone dans le shadowmap:
     // closestDepth = ...
+	closestDepth = texture(shadowMap, projCoords.xy).z;
 
     // On récupère la profondeur du fragment courant:
     // currentDepth = ...
+	currentDepth = projCoords.z;
+	
 
     // On compare les pronfondeurs et modifie shadow en conséquence:
 	// ...
+	if(closestDepth < currentDepth && fragLightCoord.w > 0)
+	{
+		shadow = 0.5;
+	}
 
     return shadow;
 }  
